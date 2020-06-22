@@ -1,6 +1,7 @@
 <?php
+session_start();
 
-    session_start();
+
     include_once ("lang/lang.".$_SESSION['NowLang'].".php");
     include "roles/includes.php";
     require_once 'connect.php';

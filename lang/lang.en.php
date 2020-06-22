@@ -1,8 +1,4 @@
 <?php
-/** ----------------------
- ** English
- ** Источник: live-code.ru
- ** ----------------------*/
 $Lang = array(
     "title" => "Lab4",
     "login_lan" => "Login",
@@ -10,6 +6,7 @@ $Lang = array(
     "pass_lan"	=> "Password",
     "pass_new"	=> "New Password",
     "button_lan" => "Submit",
+    "button_IN" => "Sing in",
     "come_back" => "Come back",
     "name" => "Your Name",
     "surname" => "Your Surname",

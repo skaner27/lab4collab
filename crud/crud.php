@@ -1,5 +1,20 @@
+<?session_start();?>
+<html>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<meta charset="UTF-8">
+<style>
+    .table{
+        margin: 0px auto;
+        width: 900px;
+        border: 1px solid black;
+
+    }
+
+</style>
+</html>
+
 <?php
-session_start();
+
 include_once ("../lang/lang.".$_SESSION['NowLang'].".php");
 require_once '../connect.php';
     // Формируем запрос из таблицы с именем blog
@@ -13,15 +28,18 @@ if(isset($_GET['del'])){
     mysqli_query($connect, "DELETE FROM `users` WHERE `users`.`id` = '$id'") or die( mysqli_error($connect));
 }
 
-    echo "<table border = 1>" .
-    "<th>" . "ID" . "</th>" .
-    "<th>" . $Lang['name_tabl'] . "</th>" .
-    "<th>" . $Lang['surname_tabl'] . "</th>" .
-    "<th>" . $Lang['login_lan'] . "</th>" .
-    "<th>" . $Lang['pass_lan'] . "</th>" .
-    "<th>" . $Lang['lang_tabl'] . "</th>" .
-    "<th>" . $Lang['role_tabl'] . "</th>";
-
+    echo "<table class= 'table table-dark'>";
+        echo '<thead>';
+    echo '<tr>'.
+    "<th scope='col'>" . "ID" . "</th>" .
+    "<th scope='col'>" . $Lang['name_tabl'] . "</th>" .
+    "<th scope='col'>" . $Lang['surname_tabl'] . "</th>" .
+    "<th scope='col'>" . $Lang['login_lan'] . "</th>" .
+    "<th scope='col'>" . $Lang['pass_lan'] . "</th>" .
+    "<th scope='col'>" . $Lang['lang_tabl'] . "</th>" .
+    "<th scope='col'>" . $Lang['role_tabl'] . "</th>";
+echo '<tr>';
+echo '</thead>';
 
     while ($row = $result->fetch_assoc())
     {
@@ -41,7 +59,10 @@ if(isset($_GET['del'])){
             <td><a href="crud.php?del=<?= $row['id'] ?>>"><? echo $Lang['dell']?></a></td> <?php
         }echo '</tr>';
     }
-    echo '</table>';
-    ?>
-<br>
-<a href="search.php"><? echo $Lang['search'] ?></a>
+echo '</table>';
+?>
+<br><center>
+    <a href = "search.php">
+        <button type="button" class="btn btn-outline-dark"><? echo $Lang['search']?></button></center></a>
+
+

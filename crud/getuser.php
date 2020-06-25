@@ -25,19 +25,7 @@ $login = $_SESSION['login'];
 $password = $_SESSION['pass'];
 $q = $_GET['q'];
 require_once '../connect.php';
-try
-{
-    $sql = "SELECT id, login, password, role, name, surname, ip FROM `users` WHERE `login`= '$login' AND `password`='$password'";
-    $result = $pdo->query($sql);
-    $row = $result->fetch();
-
-}
-catch (PDOException $e)
-{
-    $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
-    echo $output;
-    exit();
-}
+require_once '$sql_res.php';
 try
 {
     if($row['ip'] == $ip) {

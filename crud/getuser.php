@@ -40,7 +40,7 @@ catch (PDOException $e)
 }
 try
 {
-    if($row['ip'] == $ip) {
+    if($row['ip'] == $ip && $row['role'] === 'admin' || $row['ip'] == $ip && $row['role'] === 'manager') {
 
         echo "<table class= 'table table-dark'>";
         echo '<thead>';

@@ -10,42 +10,56 @@
     $user_name = $_POST['user_name'];
     $sur_name = $_POST['sur_name'];
 
-    $check_user = mysqli_query($connect, "SELECT * FROM `users` WHERE `login` = '$bad_login' AND `password` = '$bad_pass'");
-    if (mysqli_num_rows($check_user) > 0){
-        $id = mysqli_fetch_assoc($check_user);
-        $id_ = $id['id'];
-        if($new_login == " "){}
-        else{
-            mysqli_query($connect, "UPDATE `users` SET `login` = '$new_login' WHERE `users`.`id` = '$id_'");
-        }
-        if($new_pass == " "){}
-        else{
-                mysqli_query($connect, "UPDATE `users` SET `password` = '$new_pass' WHERE `users`.`id` = '$id_'");
-        }
-        if($user_name == " "){}
-        else{
-            mysqli_query($connect, "UPDATE `users` SET `name` = '$user_name' WHERE `users`.`id` = '$id_'");
-        }
-        if($sur_name == " "){}
-        else{
-            mysqli_query($connect, "UPDATE `users` SET `surname` = '$sur_name' WHERE `users`.`id` = '$id_'");
-        }
+    try
+    {
+        $sql = "SELECT id, login, password, role, name, surname FROM `users` WHERE `login`= '$bad_login' AND `password`='$bad_pass'";
+        $result = $pdo->query($sql);
+        $row = $result->fetch();
+        $id = $row['id'];
 
-        if($_SESSION['user_role'] == 'admin') {
-            header("Location: crud.php");
-        }elseif($_SESSION['user_role'] == 'manager'){
-            header("Location: crud.php");
-        }else{
-            header("Location: client_list.php");
+    }
+    catch (PDOException $e)
+    {
+        $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
+        echo $output;
+        exit();
+    }
+    try
+    {
+        if($bad_login == '' && $bad_pass == '' && $new_login == '' && $new_pass == '' && $user_name == '' && $sur_name == ''){
+
+            $_SESSION['msg12'] = $Lang['error'];
+            header('Location: ../editlist.php');
+
+        }else {
+
+            $sql = "UPDATE users SET name=?, surname=?, login=?, password=? WHERE id=?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$user_name, $sur_name, $new_login, $new_pass, $id]);
+
+            $_SESSION['user_name'] = $user_name;
+            $_SESSION['user_surname'] = $sur_name;
+
+
+            $_SESSION['msg12'] = $Lang['accept_edit'];
+            header('Location: ../editlist.php');
+
+            if ($_SESSION['user_role'] == 'admin') {
+                header("Location: crud.php");
+            } elseif ($_SESSION['user_role'] == 'manager') {
+                header("Location: crud.php");
+            } else {
+                header("Location: editlist.php");
+            }
         }
 
     }
-    else{
-        {
-
-            $_SESSION['msg1'] = $Lang['error'];
-            header("Location: editlist.php");
-        }
-
+    catch (PDOException $e)
+    {
+        $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
+        echo $output;
+        exit();
     }
+
+
 

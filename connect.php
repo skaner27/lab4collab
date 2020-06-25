@@ -1,7 +1,12 @@
 <?php
 
-    $connect = mysqli_connect("localhost", "root", "", "lab");
+try {
+    $pdo = new PDO('mysql:host=localhost;dbname=lab;charset=utf8', 'root','');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}
 
-    if(!$connect){
-        die("Error database");
-    }
+
+
+catch (PDOException $e){
+    echo $e->getMessage();
+}

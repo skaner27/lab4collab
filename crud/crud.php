@@ -33,23 +33,10 @@ if(isset($_GET['del_tab_us'])){
     $result_del->execute();
 }
 
-try
-{
-    $sql = "SELECT id, login, password, role, name, surname, ip FROM `users` WHERE `login`= '$login' AND `password`='$password'";
-    $result = $pdo->query($sql);
-    $row = $result->fetch();
-
-}
-catch (PDOException $e)
-{
-    $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
-    echo $output;
-    exit();
-}
-
+require_once '$sql_res.php';
 try{
 
-    if($row['ip'] == $ip) {
+    if($row['ip'] == $ip && $row['role'] === 'admin' || $row['ip'] == $ip && $row['role'] === 'manager') {
 
 
         echo "<table class= 'table table-dark'>";
@@ -65,7 +52,8 @@ try{
         echo '<tr>';
         echo '</thead>';
         $sql_search = "SELECT * FROM `users`";
-        $result_search = $pdo->query($sql_search);
+        $result_search = $pdo->prepare($sql_search);
+        $result_search->execute();
         while ($row_search = $result_search->fetch()) {
             echo "<tr>";
             echo "<td>" . $row_search['id'] . "</td>";
@@ -103,7 +91,6 @@ try{
 catch (PDOException $e)
 {
     $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
-    echo $output;
     exit();
 }
 

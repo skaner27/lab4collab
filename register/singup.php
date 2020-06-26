@@ -10,13 +10,13 @@ $password = $_POST['password'];
 $password_confirm = $_POST['password_confirm'];
 try
 {
-    $sql = "SELECT * FROM `users` WHERE `login` = '$login'";
-    $result = $pdo->query($sql);
+    $sql = "SELECT * FROM `users` WHERE `login` = :login";
+    $result = $pdo->prepare($sql);
+    $result->execute([':login'=>$login]);
 }
 catch (PDOException $e)
 {
     $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
-    echo $output;
     exit();
 }
 $user = $result->fetch();
@@ -28,8 +28,9 @@ if($login == $user['login']){
 }else
 {
     if ($password == $password_confirm) {
-        $sql_add = "INSERT INTO `users`(`id`, `name`, `surname`, `login`, `password`, `lang`, `role`, `ip`) VALUES  (NULL,'$full_name','$full_surname','$login','$password','ru','client', '$ip')";
-        $result_add = $pdo->query($sql_add);
+        $sql_add = "INSERT INTO `users`(`id`, `name`, `surname`, `login`, `password`, `lang`, `role`, `ip`) VALUES  (NULL, :full_name,:full_surname,:login,:password,:ru,:client, :ip)";
+        $result_add = $pdo->prepare($sql_add);
+        $result->execute([':full_name'=>$full_name, ':full_surname'=>$full_surname,':login'=>$login,':password'=>$password,'ru'=>'ru',':client'=>'client', ':ip'=>$ip]);
 
         $_SESSION['msg2'] = $Lang['accept'];
         header('Location: ../index.php');

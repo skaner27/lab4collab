@@ -12,8 +12,9 @@
 
     try
     {
-        $sql = "SELECT id, login, password, role, name, surname FROM `users` WHERE `login`= '$bad_login' AND `password`='$bad_pass'";
-        $result = $pdo->query($sql);
+        $sql = "SELECT id, login, password, role, name, surname FROM `users` WHERE `login`= :bad_login AND `password`= :bad_pass";
+        $result = $pdo->prepare($sql);
+        $result->execute([':bad_login'=>$bad_login, ':bad_pass'=>$bad_pass]);
         $row = $result->fetch();
         $id = $row['id'];
 
@@ -21,7 +22,6 @@
     catch (PDOException $e)
     {
         $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
-        echo $output;
         exit();
     }
     try
@@ -57,7 +57,6 @@
     catch (PDOException $e)
     {
         $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
-        echo $output;
         exit();
     }
 

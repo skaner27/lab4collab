@@ -25,22 +25,10 @@ $login = $_SESSION['login'];
 $password = $_SESSION['pass'];
 $q = $_GET['q'];
 require_once '../connect.php';
+require_once '$sql_res.php';
 try
 {
-    $sql = "SELECT id, login, password, role, name, surname, ip FROM `users` WHERE `login`= '$login' AND `password`='$password'";
-    $result = $pdo->query($sql);
-    $row = $result->fetch();
-
-}
-catch (PDOException $e)
-{
-    $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
-    echo $output;
-    exit();
-}
-try
-{
-    if($row['ip'] == $ip) {
+    if($row['ip'] == $ip && $row['role'] === 'admin' || $row['ip'] == $ip && $row['role'] === 'manager') {
 
         echo "<table class= 'table table-dark'>";
         echo '<thead>';
@@ -77,7 +65,6 @@ try
     catch (PDOException $e)
     {
      $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
-        echo $output;
         exit();
     }
 

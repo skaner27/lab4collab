@@ -46,39 +46,44 @@ function showUser(str) {
 <body>
 
 <form>
-<select name="users" onchange="showUser(this.value)">
+
     <?
-
-    $sql="SELECT * FROM `users`";
-    $result = $pdo->query($sql);
-
+    require_once 'getip.php';
+    $login = $_SESSION['login'];
+    $password = $_SESSION['pass'];
+    $ip = $real_ip;
+    require_once '$sql_res.php';
+    try {
+        if($row['ip'] == $ip && $row['role'] === 'admin' || $row['ip'] == $ip && $row['role'] === 'manager') {
+    $sql_tab="SELECT * FROM `users`";
+    $result_tab = $pdo->prepare($sql_tab);
+    $result_tab->execute();
+    echo '<select name="users" onchange="showUser(this.value)">';
 echo '<div class = head>';
 echo $Lang['select'];
     echo '<option value="" class= "" >' . $Lang['select']. '</option>';
-    while($row = $result->fetch()) {
-        echo '<option value="'. $row['id'].'"class="btn-outline-dark"">'.$row['name'] ." " .$row['surname'].'</option>';
+    while($row_tab = $result_tab->fetch()) {
+        echo '<option value="'. $row_tab['id'].'"class="btn-outline-dark"">'.$row_tab['name'] ." " .$row_tab['surname'].'</option>';
     }
-    var_dump($row['id']);
+    var_dump($row_tab['id']);
  echo '</div>';
     ?>
 
   </select>
 </form>
 <br>
-<div id="txtHint"><b><? echo $Lang['her'] ?>
-    <? echo "<table class= 'table table-dark'>";
-        echo '<thead>';
-        echo '<tr>'.
-            "<th scope='col'>" . "ID" . "</th>" .
-            "<th scope='col'>" . $Lang['name_tabl'] . "</th>" .
-            "<th scope='col'>" . $Lang['surname_tabl'] . "</th>" .
-            "<th scope='col'>" . $Lang['login_lan'] . "</th>" .
-            "<th scope='col'>" . $Lang['pass_lan'] . "</th>" .
-            "<th scope='col'>" . $Lang['lang_tabl'] . "</th>" .
-            "<th scope='col'>" . $Lang['role_tabl'] . "</th>";
-        echo '<tr>';
-        echo '</thead>';?></table></b></div><br>
+<div id="txtHint"><b><? echo $Lang['her'] ?></b></div><br>
 <div class="txtHint2"><a href = "crud.php">
     <button type="button" class="btn btn-outline-dark"><?echo $Lang['come_back']?></button></a></div>
 </body>
 </html>
+<?php } else{
+            include '../error404.php';
+        }
+
+        }catch (PDOException $e)
+    {
+        $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
+        header('Location: ../error404.php');
+        exit();
+    } ?>

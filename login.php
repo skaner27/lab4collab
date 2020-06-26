@@ -12,14 +12,13 @@ session_start();
     $_SESSION['pass'] = $password;
     try
     {
-         $sql = "SELECT id, login, password, role, name, surname FROM `users` WHERE `login`= '$login' AND `password`='$password'";
-         $result = $pdo->query($sql);
+         $sql = "SELECT id, login, password, role, name, surname FROM `users` WHERE `login`= :login AND `password`= :password";
+         $result = $pdo->prepare($sql);
+         $result->execute([':login'=>$login, 'password'=>$password]);
     }
     catch (PDOException $e)
     {
-        $output = 'Ошибка при выполнении обновления: ' . $e->getMessage();
-        echo $output;
-        exit();
+        header('Location: error404.php');
     }
 
 
